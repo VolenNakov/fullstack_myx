@@ -7,32 +7,35 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
   <title>MYX Fullstack Challenge</title>
   <link rel="stylesheet" href="style.css" />
-  <script defer src="clientLogic.js" /> // Learned something new. Defer option runs the script before DOMContentLoaded.
+  <script defer src="clientLogic.js">
+  </script>
+  <!---Learned something new. Defer option runs the script before DOMContentLoaded. --->
 </head>
 
 <body>
   <div id="container">
     <template id="card-template">
       <div class="card">
-        <img class="skeleton" alt=""/>
-        <span class="material-symbols-outlined">zoom_out_map</span>
+        <img class="skeleton" alt="" />
+        <img src="icons/zoom_out_map.svg" class="zoom" alt="Zoom Icon">
       </div>
     </template>
-    <footer>
-      <span>
-        <img class="footer-icon" src="icons/star.svg" alt="Star Icon"/>
-      </span>
-      <span>
-        <img class="footer-icon" src="icons/file_upload.svg" alt="File upload Icon">
-      </span>
-    </footer>
   </div>
- 
-  <div id="modal" class="modal">
-    <span class="material-symbols-outlined close">
-      close
+  <footer>
+    <span>
+      <img class="footer-icon" id="favorites" src="icons/star.svg" alt="Star Icon" />
     </span>
+    <span>
+      <input type="file" id="upload" onchange="uploadImages()" style="display:none" webkitdirectory multiple>
+      <img class="footer-icon" src="icons/file_upload.svg" alt="File upload Icon"
+        onclick="document.querySelector('#upload').click()">
+    </span>
+  </footer>
+  <div id="modal" class="modal">
     <img class="modal-content" id="modalImg">
+    <img src="icons/star.svg" class="star" />
+    <img src="icons/close.svg" class="close" />
+    <div id="modalText"></div>
 </body>
 
 </html>

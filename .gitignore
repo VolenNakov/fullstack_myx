@@ -105,3 +105,5 @@ dist
 
 # Pictures for the projest
 images/
+src/uploads/
+src/thumbnails/
