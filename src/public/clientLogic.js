@@ -57,7 +57,7 @@ const createCard = (imageName, first) => {
     img.classList.add("favorite");
   }
 
-  img.src = `http://localhost:3000/thumbnails/${imageName}.webp`;
+  img.src = `http://151.251.93.181:3000/thumbnails/${imageName}.webp`;
   img.classList.add("skeleton");
   img.onclick = () => {
     modal.style.display = "block";
@@ -65,7 +65,7 @@ const createCard = (imageName, first) => {
     modalImg.onload = () => {
       modalImg.style.display = "block";
     };
-    modalImg.src = `http://localhost:3000/uploads/${imageName}`;
+    modalImg.src = `http://151.251.93.181:3000/uploads/${imageName}`;
   };
   img.onload = () => {
     img.classList.remove("skeleton");
@@ -83,7 +83,7 @@ const getImages = async (pageNumber, pageSize) => {
     }),
   };
 
-  const response = await fetch("http://localhost:3000/images", fetchData);
+  const response = await fetch("http://151.251.93.181:3000/images", fetchData);
   const data = await response.json();
 
   if (data.paging.total != 0) {
@@ -105,11 +105,9 @@ const uploadImage = (file) => {
       method: "POST",
       body: formData,
     };
-    setTimeout(() => {
-      fetch("http://localhost:3000/upload", fetchData)
-        .then((res) => res.json())
-        .then((data) => createCard(data.imageName), resolve());
-    }, 3000);
+    fetch("http://151.251.93.181:3000/upload", fetchData)
+      .then((res) => res.json())
+      .then((data) => createCard(data.imageName), resolve());
   });
 };
 
