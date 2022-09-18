@@ -12,6 +12,7 @@ const db = new sqlite3.Database(
 
 const port = 3000;
 const imageFolder = path.join(__dirname + "/uploads/");
+const publicFolder = path.join(__dirname + "/public/");
 const thumbnailFolder = path.join(__dirname + "/thumbnails/");
 
 const upload = multer({ dest: imageFolder });
@@ -93,7 +94,7 @@ app.delete("/delete/", (req, res) => {
   });
   fs.unlinkSync(imagePath);
   fs.unlinkSync(thumbnailPath);
-  
+
   res.status(200).send(`Deleted ${imageName}`);
 });
 
@@ -115,4 +116,4 @@ app.use(
     maxAge: 86400000, //1 day cache policy
   })
 );
-app.use("/", express.static(path.join(__dirname + "/public")));
+app.use("/", express.static(publicFolder));
