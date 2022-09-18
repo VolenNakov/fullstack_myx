@@ -50,6 +50,7 @@ const parseLocalStorage = (key) => {
 const deleteBtn = document.querySelector(".delete");
 deleteBtn.onclick = () => {
   const imageName = modalImg.id;
+  const _favorites = parseLocalStorage("favorites");
 
   const fetchData = {
     method: "DELETE",
@@ -62,6 +63,10 @@ deleteBtn.onclick = () => {
     modal.style.display = "none";
     document.getElementById(imageName).parentNode.remove();
   });
+  if (_favorites.includes(imageName)) {
+    _favorites.splice(_favorites.indexOf(imageName), 1);
+    localStorage.setItem("favorites", JSON.stringify(_favorites));
+  }
 };
 
 const createCard = (imageName, first) => {
