@@ -1,3 +1,4 @@
+const fs = require("fs");
 const path = require("path");
 const sharp = require("sharp");
 const multer = require("multer");
@@ -57,6 +58,7 @@ app.post("/images/", (req, res) => {
 
 app.post("/upload/", upload.array("image"), async (req, res) => {
   const { files } = req;
+  console.log(new Date().toLocaleString("bg-BG"));
   const file = files[0];
   await sharp(file.path)
     .resize(256, 256)
@@ -73,6 +75,26 @@ app.post("/upload/", upload.array("image"), async (req, res) => {
       res.status(200).send({ imageName: file.filename });
     }
   );
+});
+
+app.delete("/delete/", (req, res) => {
+  const { imageName } = req.body;
+  const imagePath = imageFolder + imageName;
+  const thumbnailPath = thumbnailFolder + imageName + ".webp";
+
+  if (!imageName) {
+    return res.status(400).send("Missing imageName!");
+  }
+
+  db.run(`DELETE FROM images WHERE name=(?)`, [imageName], (err) => {
+    if (err) {
+      return res.status(500).send(JSON.stringify(err));
+    }
+  });
+  fs.unlinkSync(imagePath);
+  fs.unlinkSync(thumbnailPath);
+  
+  res.status(200).send(`Deleted ${imageName}`);
 });
 
 app.listen(port, () => {

@@ -12,8 +12,8 @@ closeBtn.onclick = () => {
   modal.style.display = "none";
 };
 
-const favorite = document.querySelector(".star");
-favorite.onclick = () => {
+const favoriteBtn = document.querySelector(".star");
+favoriteBtn.onclick = () => {
   const _favorites = parseLocalStorage("favorites");
   const imageName = modalImg.src.split("uploads/")[1];
   _favorites.includes(imageName)
@@ -47,10 +47,26 @@ const parseLocalStorage = (key) => {
   return JSON.parse(data);
 };
 
+const deleteBtn = document.querySelector(".delete");
+deleteBtn.onclick = () => {
+  const imageName = modalImg.id;
+
+  const fetchData = {
+    method: "DELETE",
+    body: JSON.stringify({ imageName: imageName }),
+    headers: new Headers({
+      "Content-Type": "application/json; charset=UTF-8",
+    }),
+  };
+  fetch("http://151.251.93.181:3000/delete", fetchData).then(() => {
+    modal.style.display = "none";
+    document.getElementById(imageName).parentNode.remove();
+  });
+};
+
 const createCard = (imageName, first) => {
   const card = cardTemplate.content.cloneNode(true);
   const img = card.querySelector("img");
-  img.id = imageName;
   const favorites = parseLocalStorage("favorites");
 
   if (favorites.includes(imageName)) {
@@ -59,6 +75,7 @@ const createCard = (imageName, first) => {
 
   img.src = `http://151.251.93.181:3000/thumbnails/${imageName}.webp`;
   img.classList.add("skeleton");
+  img.id = imageName;
   img.onclick = () => {
     modal.style.display = "block";
     modalImg.style.display = "none";
@@ -66,6 +83,7 @@ const createCard = (imageName, first) => {
       modalImg.style.display = "block";
     };
     modalImg.src = `http://151.251.93.181:3000/uploads/${imageName}`;
+    modalImg.id = imageName;
   };
   img.onload = () => {
     img.classList.remove("skeleton");
@@ -129,7 +147,6 @@ const uploadImages = async () => {
     }
     await Promise.all(promises);
   }
-  currentPage += files.length / pageSize;
 };
 
 let throttleTimer;
@@ -149,7 +166,8 @@ const handleInfiniteScroll = () => {
     const endOfPage =
       window.innerHeight + window.pageYOffset >= document.body.offsetHeight;
 
-    if (endOfPage) {
+    if (endOfPage && favoritesToggle) {
+      console.log(favoritesToggle);
       cardsPerRow = Math.floor(container.offsetWidth / 255);
       rowsPerWindow = Math.floor(window.innerHeight / 255) + 1;
 
