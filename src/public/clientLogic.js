@@ -59,7 +59,7 @@ deleteBtn.onclick = () => {
       "Content-Type": "application/json; charset=UTF-8",
     }),
   };
-  fetch("http://151.251.93.181:3000/delete", fetchData).then(() => {
+  fetch("http://188.166.166.89:3000/delete", fetchData).then(() => {
     modal.style.display = "none";
     document.getElementById(imageName).parentNode.remove();
   });
@@ -78,7 +78,7 @@ const createCard = (imageName, first) => {
     img.classList.add("favorite");
   }
 
-  img.src = `http://151.251.93.181:3000/thumbnails/${imageName}.webp`;
+  img.src = `http://188.166.166.89:3000/thumbnails/${imageName}.webp`;
   img.classList.add("skeleton");
   img.id = imageName;
   img.onclick = () => {
@@ -87,7 +87,7 @@ const createCard = (imageName, first) => {
     modalImg.onload = () => {
       modalImg.style.display = "block";
     };
-    modalImg.src = `http://151.251.93.181:3000/uploads/${imageName}`;
+    modalImg.src = `http://188.166.166.89:3000/uploads/${imageName}`;
     modalImg.id = imageName;
   };
   img.onload = () => {
@@ -106,7 +106,7 @@ const getImages = async (pageNumber, pageSize) => {
     }),
   };
 
-  const response = await fetch("http://151.251.93.181:3000/images", fetchData);
+  const response = await fetch("http://188.166.166.89:3000/images", fetchData);
   const data = await response.json();
 
   if (data.paging.total != 0) {
@@ -128,9 +128,12 @@ const uploadImage = (file) => {
       method: "POST",
       body: formData,
     };
-    fetch("http://151.251.93.181:3000/upload", fetchData)
+    fetch("http://188.166.166.89:3000/upload", fetchData)
       .then((res) => res.json())
-      .then((data) => createCard(data.imageName), resolve());
+      .then((data) => {
+        createCard(data.imageName);
+        resolve();
+      });
   });
 };
 
@@ -150,6 +153,7 @@ const uploadImages = async () => {
     for (let j = 0; j < batches[i].length; j++) {
       promises.push(uploadImage(batches[i][j]));
     }
+    console.log(i)
     await Promise.all(promises);
   }
 };
