@@ -105,5 +105,7 @@ dist
 
 # Pictures for the projest
 images/
-src/uploads/
-src/thumbnails/
+src/uploads/*
+!src/uploads/.gitkeep
+src/thumbnails/*
+!src/thumbnails/.gitkeep
