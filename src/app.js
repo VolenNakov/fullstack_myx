@@ -59,7 +59,6 @@ app.post("/images/", (req, res) => {
 
 app.post("/upload/", upload.array("image"), async (req, res) => {
   const { files } = req;
-  console.log(new Date().toLocaleString("bg-BG"));
   const file = files[0];
   await sharp(file.path)
     .resize(256, 256)

@@ -59,7 +59,7 @@ deleteBtn.onclick = () => {
       "Content-Type": "application/json; charset=UTF-8",
     }),
   };
-  fetch("http://188.166.166.89:3000/delete", fetchData).then(() => {
+  fetch("http://localhost:3000/delete", fetchData).then(() => {
     modal.style.display = "none";
     document.getElementById(imageName).parentNode.remove();
   });
@@ -78,7 +78,7 @@ const createCard = (imageName, first) => {
     img.classList.add("favorite");
   }
 
-  img.src = `http://188.166.166.89:3000/thumbnails/${imageName}.webp`;
+  img.src = `http://localhost:3000/thumbnails/${imageName}.webp`;
   img.classList.add("skeleton");
   img.id = imageName;
   img.onclick = () => {
@@ -87,7 +87,7 @@ const createCard = (imageName, first) => {
     modalImg.onload = () => {
       modalImg.style.display = "block";
     };
-    modalImg.src = `http://188.166.166.89:3000/uploads/${imageName}`;
+    modalImg.src = `http://localhost:3000/uploads/${imageName}`;
     modalImg.id = imageName;
   };
   img.onload = () => {
@@ -106,7 +106,7 @@ const getImages = async (pageNumber, pageSize) => {
     }),
   };
 
-  const response = await fetch("http://188.166.166.89:3000/images", fetchData);
+  const response = await fetch("http://localhost:3000/images", fetchData);
   const data = await response.json();
 
   if (data.paging.total != 0) {
@@ -128,7 +128,7 @@ const uploadImage = (file) => {
       method: "POST",
       body: formData,
     };
-    fetch("http://188.166.166.89:3000/upload", fetchData)
+    fetch("http://localhost:3000/upload", fetchData)
       .then((res) => res.json())
       .then((data) => {
         createCard(data.imageName);
@@ -138,6 +138,7 @@ const uploadImage = (file) => {
 };
 
 const uploadImages = async () => {
+  console.time("upload");
   const files = [...document.querySelector("#upload").files];
   files.sort((a, b) => b.lastModified - a.lastModified);
   const batches = [];
@@ -153,9 +154,10 @@ const uploadImages = async () => {
     for (let j = 0; j < batches[i].length; j++) {
       promises.push(uploadImage(batches[i][j]));
     }
-    console.log(i)
     await Promise.all(promises);
   }
+  console.log(`${files.length} images uploaded for`);
+  console.timeEnd("upload");
 };
 
 let throttleTimer;
@@ -176,7 +178,6 @@ const handleInfiniteScroll = () => {
       window.innerHeight + window.pageYOffset >= document.body.offsetHeight;
 
     if (endOfPage && favoritesToggle) {
-      console.log(favoritesToggle);
       cardsPerRow = Math.floor(container.offsetWidth / 255);
       rowsPerWindow = Math.floor(window.innerHeight / 255) + 1;
 
